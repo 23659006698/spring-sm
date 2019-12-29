@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wll.personnel.brand.dao.BrandInfoDao">
+
+    <resultMap type="com.wll.beans.brand.BrandInfo" id="BaseResultMap">
+        <id property="brandId" column="brand_id" jdbcType="VARCHAR"></id>
+        <result property="brandName" column="brand_name" jdbcType="VARCHAR"/>
+        <result property="englishName" column="english_name" jdbcType="VARCHAR"/>
+        <result property="brandImage" column="brand_image" jdbcType="VARCHAR"/>
+        <result property="registration" column="registration" jdbcType="VARCHAR"/>
+        <result property="brandOwner" column="brand_owner" jdbcType="VARCHAR"/>
+        <result property="statu" column="statu" jdbcType="INTEGER"/>
+        <result property="typ" column="typ" jdbcType="INTEGER"/>
+        <result property="created" column="created" jdbcType="TIMESTAMP"/>
+        <result property="updated" column="updated" jdbcType="TIMESTAMP"/>
+        <result property="synch" column="synch" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+        brand_id, brand_name,english_name, brand_image,registration, brand_owner,statu,status,typ, created, updated,
+        synch
+    </sql>
+
+    <sql id="BaseProperty">
+        #{brandId,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR},#{englishName,jdbcType=VARCHAR}
+        #{brandImage,jdbcType=VARCHAR},#{registration,jdbcType=VARCHAR},#{brandOwner,jdbcType=VARCHAR},
+        #{statu,jdbcType=INTEGER},#{typ,jdbcType=INTEGER}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP},
+        #{synch,jdbcType=INTEGER}
+    </sql>
+
+    <select id="selectBrandInfoAll" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumn"/>
+        from pers_brand_info
+    </select>
+    <select id="selectBrandInfoList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="BaseColumn"/>
+        from pers_brand_info where brand_id in
+        <if test="brandId != null and brandId !=''">
+            <foreach item="bId" collection="brandId.split(',')" open="(" separator="," close=")">
+                #{bId}
+            </foreach>
+        </if>
+
+    </select>
+    <select id="selectBrandInfoSelective" resultMap="BaseResultMap"
+            parameterType="com.wll.beans.brand.BrandInfo">
+        select
+        <include refid="BaseColumn"/>
+        from pers_brand_info
+        <where>
+
+            <if test="brandId != null  and brandId != '' ">
+                and brand_id = #{brandId,jdbcType=VARCHAR}
+            </if>
+            <if test="brandName != null  and brandName != '' ">
+                and brand_name like "%"#{brandName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="englishName != null and englishName!= ''">
+                and english_name like "%"#{englishName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="brandIds != null and brandIds != ''">
+                and brand_id in
+                <foreach item="brandIds" collection="brandIds.split(',')" open="(" separator="," close=")">
+                    #{brandIds}
+                </foreach>
+            </if>
+            <if test="registration != null and registration != ''">
+                and registration = #{registration,jdbcType=VARCHAR}
+            </if>
+            <if test="brandImage != null  and brandImage != '' ">
+                and brand_image = #{brandImage,jdbcType=VARCHAR}
+            </if>
+            <if test="typ != null ">
+                and typ = #{typ,jdbcType=INTEGER}
+            </if>
+            <if test="created != null ">
+                and created = #{created,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updated != null ">
+                and updated = #{updated,jdbcType=TIMESTAMP}
+            </if>
+            <if test="synch != null ">
+                and synch = #{synch,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBrandInfoOne" resultMap="BaseResultMap"
+            parameterType="com.wll.beans.brand.BrandInfo">
+        select
+        <include refid="BaseColumn"/>
+        from pers_brand_info
+        <where>
+            <if test="brandId != null  and brandId != '' ">
+                and brand_id = #{brandId,jdbcType=VARCHAR}
+            </if>
+            <if test="brandName != null  and brandName != '' ">
+                and brand_name = #{brandName,jdbcType=VARCHAR}
+            </if>
+            <if test="registration != null and registration != ''">
+                and registration = #{registration,jdbcType=VARCHAR}
+            </if>
+            <if test="brandImage != null  and brandImage != '' ">
+                and brand_image = #{brandImage,jdbcType=VARCHAR}
+            </if>
+            <if test="typ != null ">
+                and typ = #{typ,jdbcType=INTEGER}
+            </if>
+            <if test="created != null ">
+                and created = #{created,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updated != null ">
+                and updated = #{updated,jdbcType=TIMESTAMP}
+            </if>
+            <if test="synch != null ">
+                and synch = #{synch,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBrandInfoById" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumn"/>
+        from pers_brand_info where brand_id = #{brandId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertBrandInfo" parameterType="com.wll.beans.brand.BrandInfo">
+        insert into pers_brand_info(
+        <include refid="BaseColumn"/>
+        ) values (
+        <include refid="BaseProperty"/>
+        )
+    </insert>
+    <insert id="insertBrandInfoSelective" parameterType="com.wll.beans.brand.BrandInfo">
+        insert into pers_brand_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null  and brandId != ''  ">
+                brand_id,
+            </if>
+            <if test="brandName != null  and brandName != ''  ">
+                brand_name,
+            </if>
+            <if test="englishName != null and englishName != ''">
+                english_name,
+            </if>
+            <if test="brandImage != null  and brandImage != ''  ">
+                brand_image,
+            </if>
+            <if test="registration != null and registration != '' ">
+                registration,
+            </if>
+            <if test="brandOwner !=null and brandOwner!= '' ">
+                brand_owner,
+            </if>
+            <if test="statu != null">
+                statu,
+            </if>
+            <if test="typ != null  ">
+                typ,
+            </if>
+            <if test="created != null  ">
+                created,
+            </if>
+            <if test="updated != null  ">
+                updated,
+            </if>
+            <if test="synch != null  ">
+                synch,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null  and brandId != ''  ">
+                #{brandId,jdbcType=VARCHAR},
+            </if>
+            <if test="brandName != null  and brandName != ''  ">
+                #{brandName,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null and englishName != ''">
+                #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="brandImage != null  and brandImage != ''  ">
+                #{brandImage,jdbcType=VARCHAR},
+            </if>
+            <if test="registration != null and registration != '' ">
+                #{registration,jdbcType=VARCHAR},
+            </if>
+            <if test="brandOwner !=null and brandOwner!= '' ">
+                #{brandOwner,jdbcType=VARCHAR},
+            </if>
+            <if test="statu != null">
+                #{statu,jdbcType=INTEGER},
+            </if>
+            <if test="typ != null  ">
+                #{typ,jdbcType=INTEGER},
+            </if>
+            <if test="created != null  ">
+                #{created,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updated != null  ">
+                #{updated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="synch != null  ">
+                #{synch,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateBrandInfo" parameterType="com.wll.beans.brand.BrandInfo">
+        update pers_brand_info
+        <trim prefix="set" suffixOverrides=",">
+            brand_name = #{brandName,jdbcType=VARCHAR},
+            brand_image = #{brandImage,jdbcType=VARCHAR},
+            typ = #{typ,jdbcType=INTEGER},
+            created = #{created,jdbcType=TIMESTAMP},
+            updated = #{updated,jdbcType=TIMESTAMP},
+            synch = #{synch,jdbcType=INTEGER},
+        </trim>
+        where brand_id = #{brandId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateBrandIsStatus" parameterType="com.wll.beans.brand.BrandInfo">
+        update pers_brand_info set status= #{status,jdbcType=INTEGER} where brand_id = #{brandId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateBrandInfoSelective" parameterType="com.wll.beans.brand.BrandInfo">
+        update pers_brand_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="brandName != null  and brandName != ''  ">
+                brand_name = #{brandName,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null and englishName != ''">
+                english_name = #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="brandImage != null  and brandImage != ''  ">
+                brand_image = #{brandImage,jdbcType=VARCHAR},
+            </if>
+            <if test="registration != null and registration != ''">
+                registration = #{registration,jdbcType=VARCHAR},
+            </if>
+            <if test="brandOwner != null and brandOwner != ''">
+                brand_owner = #{brandOwner,jdbcType=VARCHAR},
+            </if>
+            <if test="statu != null">
+                statu = #{statu,jdbcType=INTEGER},
+            </if>
+            <if test="typ != null  ">
+                typ = #{typ,jdbcType=INTEGER},
+            </if>
+            <if test="created != null  ">
+                created = #{created,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updated != null  ">
+                updated = #{updated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="synch != null  ">
+                synch = #{synch,jdbcType=INTEGER},
+            </if>
+        </trim>
+        where brand_id = #{brandId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteBrandInfoById">
+        delete from pers_brand_info where brand_id = #{brandId,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteBrandInfoByIds" parameterType="java.lang.String">
+        delete from pers_brand_info where brand_id in
+        <if test="brandIds != null and brandIds !=''">
+            <foreach item="brandId" collection="brandIds.split(',')" open="(" separator="," close=")">
+                #{brandId}
+            </foreach>
+        </if>
+    </delete>
+
+</mapper>

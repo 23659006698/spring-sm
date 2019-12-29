@@ -1,0 +1,11 @@
+server:
+  port: 8083
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /personnel
+spring:
+  application:
+    name: personnel
+  profiles:
+    active: mybatis
